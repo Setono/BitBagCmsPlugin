@@ -54,7 +54,7 @@ services:
             - "@bitbag_sylius_cms_plugin.repository.section"
             - "@sylius.image_uploader"
             - "@sylius.repository.product"
-            - "@sylius.context.channel"
+            - "@sylius.repository.channel"
             - "@sylius.context.locale"
 
     bitbag_sylius_cms_plugin.fixture.factory.frequently_asked_question:
@@ -77,7 +77,7 @@ services:
         arguments:
             - "@bitbag_sylius_cms_plugin.factory.media"
             - "@bitbag_sylius_cms_plugin.factory.media_translation"
-            - "@sylius.context.channel"
+            - "@sylius.repository.channel"
             - "@bitbag_sylius_cms_plugin.resolver.media_provider"
             - "@bitbag_sylius_cms_plugin.repository.media"
             - "@bitbag_sylius_cms_plugin.assigner.products"

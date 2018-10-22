@@ -18,7 +18,7 @@ use BitBag\SyliusCmsPlugin\Entity\PageTranslationInterface;
 use BitBag\SyliusCmsPlugin\Entity\SectionInterface;
 use BitBag\SyliusCmsPlugin\Repository\PageRepositoryInterface;
 use BitBag\SyliusCmsPlugin\Repository\SectionRepositoryInterface;
-use Sylius\Component\Channel\Context\ChannelContextInterface;
+use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
 use Sylius\Component\Core\Repository\ProductRepositoryInterface;
 use Sylius\Component\Core\Uploader\ImageUploaderInterface;
 use Sylius\Component\Locale\Context\LocaleContextInterface;
@@ -45,8 +45,8 @@ final class PageFixtureFactory implements FixtureFactoryInterface
     /** @var ProductRepositoryInterface */
     private $productRepository;
 
-    /** @var ChannelContextInterface */
-    private $channelContext;
+    /** @var ChannelRepositoryInterface */
+    private $channelRepository;
 
     /** @var LocaleContextInterface */
     private $localeContext;
@@ -58,7 +58,7 @@ final class PageFixtureFactory implements FixtureFactoryInterface
         SectionRepositoryInterface $sectionRepository,
         ImageUploaderInterface $imageUploader,
         ProductRepositoryInterface $productRepository,
-        ChannelContextInterface $channelContext,
+        ChannelRepositoryInterface $channelRepository,
         LocaleContextInterface $localeContext
     ) {
         $this->pageFactory = $pageFactory;
@@ -67,7 +67,7 @@ final class PageFixtureFactory implements FixtureFactoryInterface
         $this->sectionRepository = $sectionRepository;
         $this->imageUploader = $imageUploader;
         $this->productRepository = $productRepository;
-        $this->channelContext = $channelContext;
+        $this->channelRepository = $channelRepository;
         $this->localeContext = $localeContext;
     }
 
@@ -105,7 +105,9 @@ final class PageFixtureFactory implements FixtureFactoryInterface
 
         $page->setCode($code);
         $page->setEnabled($pageData['enabled']);
-        $page->addChannel($this->channelContext->getChannel());
+        foreach($this->channelRepository->findAll() as $channel) {
+            $page->addChannel($channel);
+        }
 
         foreach ($pageData['translations'] as $localeCode => $translation) {
             /** @var PageTranslationInterface $pageTranslation */
@@ -138,14 +140,16 @@ final class PageFixtureFactory implements FixtureFactoryInterface
 
     private function resolveProducts(PageInterface $page, int $limit): void
     {
-        $products = $this->productRepository->findLatestByChannel(
-            $this->channelContext->getChannel(),
-            $this->localeContext->getLocaleCode(),
-            $limit
-        );
+        foreach($this->channelRepository->findAll() as $channel) {
+            $products = $this->productRepository->findLatestByChannel(
+                $channel,
+                $this->localeContext->getLocaleCode(),
+                $limit
+            );
 
-        foreach ($products as $product) {
-            $page->addProduct($product);
+            foreach ($products as $product) {
+                $page->addProduct($product);
+            }
         }
     }
 
