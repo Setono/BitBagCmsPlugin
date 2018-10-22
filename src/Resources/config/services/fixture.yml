@@ -42,7 +42,7 @@ services:
             - "@bitbag_sylius_cms_plugin.repository.block"
             - "@bitbag_sylius_cms_plugin.repository.section"
             - "@sylius.repository.product"
-            - "@sylius.context.channel"
+            - "@sylius.repository.channel"
             - "@sylius.context.locale"
 
     bitbag_sylius_cms_plugin.fixture.factory.page:

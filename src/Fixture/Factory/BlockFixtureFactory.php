@@ -17,7 +17,10 @@ use BitBag\SyliusCmsPlugin\Entity\BlockTranslationInterface;
 use BitBag\SyliusCmsPlugin\Entity\SectionInterface;
 use BitBag\SyliusCmsPlugin\Repository\BlockRepositoryInterface;
 use BitBag\SyliusCmsPlugin\Repository\SectionRepositoryInterface;
+use Gedmo\Tree\RepositoryInterface;
+use PhpOption\Tests\Repository;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
+use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
 use Sylius\Component\Core\Repository\ProductRepositoryInterface;
 use Sylius\Component\Locale\Context\LocaleContextInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
@@ -39,8 +42,8 @@ final class BlockFixtureFactory implements FixtureFactoryInterface
     /** @var ProductRepositoryInterface */
     private $productRepository;
 
-    /** @var ChannelContextInterface */
-    private $channelContext;
+    /** @var ChannelRepositoryInterface */
+    private $channelRepository;
 
     /** @var LocaleContextInterface */
     private $localeContext;
@@ -51,7 +54,7 @@ final class BlockFixtureFactory implements FixtureFactoryInterface
         BlockRepositoryInterface $blockRepository,
         SectionRepositoryInterface $sectionRepository,
         ProductRepositoryInterface $productRepository,
-        ChannelContextInterface $channelContext,
+        ChannelRepositoryInterface $channelRepository,
         LocaleContextInterface $localeContext
     ) {
         $this->blockFactory = $blockFactory;
@@ -59,7 +62,7 @@ final class BlockFixtureFactory implements FixtureFactoryInterface
         $this->blockRepository = $blockRepository;
         $this->sectionRepository = $sectionRepository;
         $this->productRepository = $productRepository;
-        $this->channelContext = $channelContext;
+        $this->channelRepository = $channelRepository;
         $this->localeContext = $localeContext;
     }
 
@@ -97,7 +100,9 @@ final class BlockFixtureFactory implements FixtureFactoryInterface
 
         $block->setCode($code);
         $block->setEnabled($blockData['enabled']);
-        $block->addChannel($this->channelContext->getChannel());
+        foreach($this->channelRepository->findAll() as $channel) {
+            $block->addChannel($channel);
+        }
 
         foreach ($blockData['translations'] as $localeCode => $translation) {
             /** @var BlockTranslationInterface $blockTranslation */
@@ -115,14 +120,16 @@ final class BlockFixtureFactory implements FixtureFactoryInterface
 
     private function resolveProducts(BlockInterface $block, int $limit): void
     {
-        $products = $this->productRepository->findLatestByChannel(
-            $this->channelContext->getChannel(),
-            $this->localeContext->getLocaleCode(),
-            $limit
-        );
+        foreach($this->channelRepository->findAll() as $channel) {
+            $products = $this->productRepository->findLatestByChannel(
+                $channel,
+                $this->localeContext->getLocaleCode(),
+                $limit
+            );
 
-        foreach ($products as $product) {
-            $block->addProduct($product);
+            foreach ($products as $product) {
+                $block->addProduct($product);
+            }
         }
     }
 
