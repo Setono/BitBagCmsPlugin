@@ -89,7 +89,7 @@ final class BlockFixtureFactory implements FixtureFactoryInterface
 
         $this->sectionsAssigner->assign($block, $blockData['sections']);
         $this->productsAssigner->assign($block, $blockData['products']);
-        $this->productsAssigner->assign($block, $blockData['taxons']);
+        $this->taxonsAssigner->assign($block, $blockData['taxons']);
         $this->channelAssigner->assign($block, $blockData['channels']);
 
         $block->setCode($code);
