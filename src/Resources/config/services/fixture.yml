@@ -41,6 +41,7 @@ services:
             - "@bitbag_sylius_cms_plugin.factory.block_translation"
             - "@bitbag_sylius_cms_plugin.repository.block"
             - "@bitbag_sylius_cms_plugin.assigner.products"
+            - "@bitbag_sylius_cms_plugin.assigner.taxons"
             - "@bitbag_sylius_cms_plugin.assigner.sections"
             - "@bitbag_sylius_cms_plugin.assigner.channels"
 

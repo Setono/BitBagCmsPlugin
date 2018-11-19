@@ -3,3 +3,6 @@ services:
         class: BitBag\SyliusCmsPlugin\Repository\ProductRepository
         parent: sylius.repository.product
 
+    bitbag_sylius_cms_plugin.repository.taxon:
+        class: BitBag\SyliusCmsPlugin\Repository\TaxonRepository
+        parent: sylius.repository.taxon
