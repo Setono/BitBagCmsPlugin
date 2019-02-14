@@ -59,8 +59,10 @@ final class BlockFixtureFactory implements FixtureFactoryInterface
     public function __construct(
         FactoryInterface $blockFactory,
         FactoryInterface $blockTranslationFactory,
-        ProductRepositoryInterface $productRepository,
         BlockRepositoryInterface $blockRepository,
+        ProductRepositoryInterface $productRepository,
+        ChannelContextInterface $channelContext,
+        LocaleContextInterface $localeContext,
         ProductsAssignerInterface $productsAssigner,
         TaxonsAssignerInterface $taxonsAssigner,
         SectionsAssignerInterface $sectionsAssigner,
@@ -70,6 +72,8 @@ final class BlockFixtureFactory implements FixtureFactoryInterface
         $this->blockTranslationFactory = $blockTranslationFactory;
         $this->blockRepository = $blockRepository;
         $this->productRepository = $productRepository;
+        $this->channelContext = $channelContext;
+        $this->localeContext = $localeContext;
         $this->productsAssigner = $productsAssigner;
         $this->taxonsAssigner = $taxonsAssigner;
         $this->sectionsAssigner = $sectionsAssigner;
