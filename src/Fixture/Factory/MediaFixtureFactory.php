@@ -108,7 +108,7 @@ final class MediaFixtureFactory implements FixtureFactoryInterface
         }
 
         $this->sectionsAssigner->assign($media, $mediaData['sections']);
-        $this->productsAssigner->assign($media, $mediaData['products']);
+        $this->productsAssigner->assign($media, $mediaData['productCodes']);
         $this->channelAssigner->assign($media, $mediaData['channels']);
 
         $this->mediaRepository->add($media);
