@@ -42,7 +42,7 @@ BitBag\SyliusCmsPlugin\Entity\Block:
                         onDelete: CASCADE
 
 
-        taxonomies:
+        taxons:
             targetEntity: Sylius\Component\Taxonomy\Model\TaxonInterface
             joinTable:
                 name: bitbag_cms_block_taxonomies
